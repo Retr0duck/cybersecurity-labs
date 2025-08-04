@@ -1,0 +1,40 @@
+First lab: Phishing Analysis 
+
+Tools: 
+  *Vm with connection nat (In this case i'm using linux)*
+  *Terminal*
+  *Basic commands in linux*
+
+Case:
+    In this case is a lab very much simple, a document with the extension ".eml" or basically a mail.
+
+Solution:
+        First of all you need to got a vm configured well and i recommend to use nat conecction to got internet conecction and
+        security in your main computer, or well this configuration is good for this lab, then download the file in a folder
+        with the extension .zip or this is in my case because i'm doing this in a lab, then descompress the folder and you will get a file
+        this file can have a differents types of names, then we can do the funny, open a terminal and navegate to the folder in my case
+        i'm gonna use "$ cd Downloads/lab/analysis" and then i can see the file i'm gonna call this file "EmailLegite" (is only a example).
+        then in the terminal use "$ file EmailLegite" and if the file is really a mail the terminal print a message like this below
+        
+        ("Website contact form submission.eml: SMTP mail, ASCII text, with very long lines (429), with CRLF line terminators")
+
+        indicating that the file is an SMTP mail, but we can be so sure if the file is secure or not, so we are gonna work this file with tools like 
+        "cat" to show the file in the terminal like text/plain and "grep" to search especific things.
+        ok, now we got a file and a secure solution to open the file i'm gonna tell my solution.
+
+        1-We need to find the primary recipient, so i personally recommend to first take a look with "cat" command to understand the type of mail and how it works,
+        now that we know how it works, we can see in the headers the recipient, in my case the recipient is "2222:a0c:aa16:0:0:0:0:0"
+
+        2-Lately i need to to find the subject of the mail, we can find this in the headers or with grep using "grep i- "^subject:" "EmailLegite" "
+        and you will get a text like this "Contact important".
+
+        3-Now we need to get the date of the mail, is a little bit more easy, again we can use grep to find a date "grep "Date:" "EmailLegite" "
+        and we got differents dates, and other way is read it with cat and check the headers, is more hard because you need to read all but is better because
+        you have better knowledge of the type of technique.
+
+        4-Now the lab ask me for the originating ip, again we can use grep to find the ip or we can read all the mail, i can give us a tip, the use of "^"
+        help us to see all the line, like this "$: grep i- "Receiver ip: 102,10.10" " this is a example, no the responses for this lab.
+        
+
+        
+        
