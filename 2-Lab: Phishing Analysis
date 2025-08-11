@@ -1,0 +1,22 @@
+Second Lab: Phishing Analysis
+### Category: Security operations
+  🧰 Tools:
+        Terminal
+        Basic linux commands
+        Vm configured (nat conecction and don't share folder with your real machine).
+        Text editor
+
+
+### Overview:
+    Another classic phishing technique were this mail try to look legite and safe but is not how it looks.
+
+
+### Step 1:
+    In this lab we are gonna work with a file with ".eml" extension and that's all the files, we need to analize and file, i reccomend to read the file only with cat or gress
+    don't open directly the file, this maybe contain malicious scripts. So first of all we need to find the sending email address, i recommend to view all the file with cat
+    for context, but directly we can find it like this.
+
+    
+  
+  
+        
