@@ -1,6 +1,6 @@
 # 🛡️ cybersecurity-labs
 
-<details>
+<details open>
 <summary>🌎 English</summary>
 
 Welcome!  
@@ -18,7 +18,7 @@ Here you will find step-by-step guides, tools I used, and everything I learned d
 If you're interested in cybersecurity, feel free to explore and learn with me!
 </details>
 
-<details open>
+<details>
 <summary>🇪🇸 Español</summary>
 
 ¡Bienvenido/a!  
