@@ -1,119 +1,121 @@
-# First Lab: Phishing Analysis
-
-## 🛠️ Tools Needed
-- **Virtual Machine (VM)** with NAT connection (recommended: Linux)
-- **Terminal**
-- **Basic Linux Commands**
+# 🧪 **First Lab: Phishing Analysis**
 
 ---
 
-## 🕵️ Case Overview
-
-In this beginner-friendly lab, you'll analyze a suspicious email file (`.eml` extension). This is typically used to store email messages, and may potentially contain phishing content.
-
----
-
-## 💡 Step-by-Step Solution
-
-### 1. **Environment Setup**
-Make sure your VM is properly configured, ideally with a NAT connection for both internet access and security isolation from your main computer.
-
-**Tip:** Download your lab files into a dedicated folder, usually as a `.zip`. Extract the archive, and you’ll find the email file—let’s call it `EmailLegite` for this example.
-
-### 2. **Explore the File**
-Open your terminal and navigate to the analysis folder:
-
-```bash
-cd Downloads/lab/analysis
-```
-Check the file type:
-```bash
-file EmailLegite
-```
-If it’s a valid email, you’ll see output like:
-```
-Website contact form submission.eml: SMTP mail, ASCII text, with very long lines (429), with CRLF line terminators
-```
+## 🛠️ **Tools Required**
+- 🖥️ **VM with NAT connection** (Recommended: Linux for security and internet access)
+- 🖳 **Terminal**
+- 🧑‍💻 **Basic Linux Commands**
 
 ---
 
-### 3. **Analyze the Email Contents**
+## 🕵️ **Lab Scenario**
+> **You’ve received a suspicious email file (`.eml`). Your mission:**  
+> Analyze its contents to detect phishing indicators using a secure environment.
 
-#### **A. Find the Primary Recipient**
-Use `cat` to display the email and examine headers:
+---
+
+## ⚡ **Quick Start**
+```diff
++ Always use a VM and NAT for internet safety and isolation.
+```
+
+1. **Download** the lab archive (e.g., `.zip`) and extract it.
+2. **Navigate** to your workspace:
+    ```bash
+    cd ~/Downloads/lab/analysis
+    ```
+3. **Identify the file type:**
+    ```bash
+    file EmailLegite
+    ```
+    > Example Output:  
+    > `Website contact form submission.eml: SMTP mail, ASCII text, with very long lines (429), with CRLF line terminators`
+
+---
+
+## 🔍 **Step-by-Step Analysis**
+
+### 1️⃣ **Find the Primary Recipient**
 ```bash
 cat EmailLegite
 ```
-Look for the recipient field (e.g., `2222:a0c:aa16:0:0:0:0:0`).
+Look for header fields like `To:` or similar.  
+> Example: `2222:a0c:aa16:0:0:0:0:0`
 
-#### **B. Identify the Subject**
-Extract the subject using `grep`:
+---
+
+### 2️⃣ **Extract the Subject Line**
 ```bash
 grep -i "^Subject:" EmailLegite
 ```
-Example output:
-```
-Subject: Contact important
-```
+> Output:  
+> `Subject: Contact important`
 
-#### **C. Get the Date**
-Search for the date:
+---
+
+### 3️⃣ **Get the Email Date**
 ```bash
 grep "^Date:" EmailLegite
 ```
-Or read through with `cat` for context.
+You can also read all headers with `cat` for deeper inspection.
 
-#### **D. Find the Originating IP Address**
-Use `grep` to locate the IP:
+---
+
+### 4️⃣ **Locate the Originating IP**
 ```bash
 grep -i "Received:" EmailLegite
 ```
-Example (not lab answer): `Receiver IP: 102,10.10`
+> Example (not actual answer):  
+> `Receiver IP: 102,10.10`
 
-#### **E. Discover the Hostname**
-Search for hostname mentions:
+---
+
+### 5️⃣ **Reveal the Hostname**
 ```bash
 grep -i "Hostname" EmailLegite
 ```
-Example output:
-```
-X-AntiAbuse: Primary Hostname - c9s0-4w-zae.hosting-services.net.au
-```
-
-#### **F. Spot URLs**
-Find links using `grep`:
-```bash
-grep -o 'http[s]*://[^"]*' EmailLegite
-```
-Review URLs to see where they're hosted (e.g., Blogspot).
+> Output:  
+> `X-AntiAbuse: Primary Hostname - c9s0-4w-zae.hosting-services.net.au`
 
 ---
 
-### 4. **File Management and Confirmation**
-List files in your folder:
-```bash
-ls
-```
-Check file types:
-```bash
-file {NameOfFile}
-```
+### 6️⃣ **Check the Filename & Find URLs**
+- **List files:**
+    ```bash
+    ls
+    ```
+- **Check file type:**
+    ```bash
+    file EmailLegite
+    ```
+- **Extract URLs:**
+    ```bash
+    grep -o 'http[s]*://[^"]*' EmailLegite
+    ```
+> URLs often point to sites like Blogspot or similar platforms.
 
 ---
 
-## 📝 Summary
-
-This is a classic phishing email—designed to trick victims into clicking a link and submitting sensitive information. Although the email may appear legitimate, clicking the embedded link redirects you to a fake page crafted to steal your credentials.
-
-**Remember:**  
-- Always analyze suspicious emails in a safe environment (VM).
-- Use terminal commands to inspect headers and links.
-- Stay cautious when handling unknown files or clicking links.
+### 7️⃣ **Where is it Hosted?**
+Check the URLs found above; look for hosting services or suspicious platforms.
 
 ---
 
-**Stay safe and keep analyzing!**
-        
+## 🛡️ **Summary & Key Takeaways**
+
+> :warning: **Phishing emails use fear and fake information to trick victims.**  
+> The link inside may look safe but often leads to a malicious page asking for your credentials.
+
+**Best Practices:**
+- **Analyze emails in a safe VM environment.**
+- **Inspect headers and links before clicking.**
+- **Stay vigilant for suspicious requests.**
+
+---
+
+> **Stay safe and keep learning! 🚀**
+
 
         
 
