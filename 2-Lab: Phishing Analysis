@@ -16,6 +16,11 @@ Second Lab: Phishing Analysis
     don't open directly the file, this maybe contain malicious scripts. So first of all we need to find the sending email address, i recommend to view all the file with cat
     for context, but directly we can find it like this.
 
+<p align="center">
+  <img src="images/correo.png" alt="Captura del correo malicioso" width="500">
+</p>
+
+
     
   
   
