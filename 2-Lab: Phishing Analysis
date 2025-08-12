@@ -15,10 +15,39 @@ Second Lab: Phishing Analysis
     In this lab we are gonna work with a file with ".eml" extension and that's all the files, we need to analize and file, i reccomend to read the file only with cat or gress
     don't open directly the file, this maybe contain malicious scripts. So first of all we need to find the sending email address, i recommend to view all the file with cat
     for context, but directly we can find it like this.
+    > grep -i '^From:' file.eml
 
-<p align="center">
-  <img src="images/correo.png" alt="Captura del correo malicioso" width="500">
-</p>
+## Step 2:
+  Then we need to found the recipient of the mail, this is easy, agan we are gonna use grep but i reccommend to read all the mail to know about this technique.
+  > grep -i '^To:' file.eml
+    Result someone.outlook.com
+
+## Step 3:
+  To understand more this attack i reccommend to analyze the headers of the mail, here you can find information like, who send the mail, who receives that mail, and what
+  company are trying to falsificate, in this case the attacker is acting like amazon.
+  analize all the headers and you find the information.
+
+## Step 4:
+  Then we need a ide or program to read the file.eml, don't execute the program or code inside the mail, this is malicious, then we need to capture the date in this case
+  date is below the subject, it looks like this.
+  > Date: Wed, 19 Jun 2019 04:30:23 +0900
+
+## Step 5:
+  Once we got the file.eml extension, open it with visual studio code or other ide but dont click in any link, then you maybe found a fragment encoded in base 64, decode
+  that fragment, you can use a web for decoding that, then you get a html, analize the html and find where is the attacker is using the technique, the most common of techniques
+  is a <a> with style of button and inside a link where the attacker capture your information.
+
+## Step 6:
+  Then you can check if the page is active using url2png, in my case this page is down so we can't do anymore, but we can keep searching the data decoded and we can find 
+  the attacker use logos from a free page for logos and photos and also if we do a deep search we can find in the part of support a url with a facebook account, probably a
+  false account from the attacker to scam you acting like a real support of amazon.
+
+### Resume:
+This a common case of phishing where the attacker try to make fear in the user sending mails with the context of "Take acctions with your account" or "Your account is blocked, need attencion"
+and the mail you can find 3 parts, 2 are encoded and 1 not, basically the 2 parts encoded are encoded in base 64, and inside are a html with 2 buttons one for change the
+configurations, but is not that is a link where the attacker trap your data and a button for support but inside this button con can find a link to a false account of facebook.
+in resume this a common phishing attack.
+
 
 
     
