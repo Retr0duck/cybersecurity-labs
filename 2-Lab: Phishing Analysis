@@ -1,56 +1,104 @@
-Second Lab: Phishing Analysis
-### Category: Security operations
-  🧰 Tools:
-        Terminal
-        Basic linux commands
-        Vm configured (nat conecction and don't share folder with your real machine).
-        Text editor
+# Lab 2: Phishing Analysis
 
+**Category:** Security Operations
 
-### Overview:
-    Another classic phishing technique were this mail try to look legite and safe but is not how it looks.
+---
 
+## Tools Required
 
-### Step 1:
-    In this lab we are gonna work with a file with ".eml" extension and that's all the files, we need to analize and file, i reccomend to read the file only with cat or gress
-    don't open directly the file, this maybe contain malicious scripts. So first of all we need to find the sending email address, i recommend to view all the file with cat
-    for context, but directly we can find it like this.
-    > grep -i '^From:' file.eml
+- Linux Terminal
+- Basic Linux commands (`cat`, `grep`)
+- Virtual Machine (VM) with NAT network (never share folders with your real host)
+- Text editor (VS Code, nano, etc.)
 
-## Step 2:
-  Then we need to found the recipient of the mail, this is easy, agan we are gonna use grep but i reccommend to read all the mail to know about this technique.
-  > grep -i '^To:' file.eml
-    Result someone.outlook.com
+---
 
-## Step 3:
-  To understand more this attack i reccommend to analyze the headers of the mail, here you can find information like, who send the mail, who receives that mail, and what
-  company are trying to falsificate, in this case the attacker is acting like amazon.
-  analize all the headers and you find the information.
+## Overview
 
-## Step 4:
-  Then we need a ide or program to read the file.eml, don't execute the program or code inside the mail, this is malicious, then we need to capture the date in this case
-  date is below the subject, it looks like this.
-  > Date: Wed, 19 Jun 2019 04:30:23 +0900
+In this lab, you will analyze a phishing email saved as a `.eml` file. The email appears legitimate but contains malicious elements intended to deceive the recipient. You will learn to identify telltale signs of phishing and safely investigate suspicious content.
 
-## Step 5:
-  Once we got the file.eml extension, open it with visual studio code or other ide but dont click in any link, then you maybe found a fragment encoded in base 64, decode
-  that fragment, you can use a web for decoding that, then you get a html, analize the html and find where is the attacker is using the technique, the most common of techniques
-  is a <a> with style of button and inside a link where the attacker capture your information.
+---
 
-## Step 6:
-  Then you can check if the page is active using url2png, in my case this page is down so we can't do anymore, but we can keep searching the data decoded and we can find 
-  the attacker use logos from a free page for logos and photos and also if we do a deep search we can find in the part of support a url with a facebook account, probably a
-  false account from the attacker to scam you acting like a real support of amazon.
+## Step 1: Safe Email Inspection
 
-### Resume:
-This a common case of phishing where the attacker try to make fear in the user sending mails with the context of "Take acctions with your account" or "Your account is blocked, need attencion"
-and the mail you can find 3 parts, 2 are encoded and 1 not, basically the 2 parts encoded are encoded in base 64, and inside are a html with 2 buttons one for change the
-configurations, but is not that is a link where the attacker trap your data and a button for support but inside this button con can find a link to a false account of facebook.
-in resume this a common phishing attack.
+**Never open suspicious emails in a real email client!**  
+Instead, view the file using safe command-line tools:
 
+```bash
+cat file.eml | less
+```
 
+To find the sender (who sent the email):
 
-    
-  
-  
-        
+```bash
+grep -i '^From:' file.eml
+```
+
+---
+
+## Step 2: Identify the Recipient
+
+To locate the recipient:
+
+```bash
+grep -i '^To:' file.eml
+```
+
+Review the full email to understand the attack scenario and target.
+
+---
+
+## Step 3: Header Analysis
+
+Email headers reveal valuable information about sender, recipient, servers, and possible spoofing attempts.  
+Look for headers such as `From:`, `To:`, `Subject:`, `Received:`, and `Reply-To:`.  
+Check for inconsistencies or suspicious domains—phishing attacks often use domains that mimic real organizations (e.g., Amazon, PayPal) but are slightly different.
+
+---
+
+## Step 4: Extract the Date
+
+To view the date the email was sent:
+
+```bash
+grep -i '^Date:' file.eml
+```
+
+Example output:
+
+```
+Date: Wed, 19 Jun 2019 04:30:23 +0900
+```
+
+---
+
+## Step 5: Decode Encoded Content
+
+Phishing emails may hide malicious HTML in Base64-encoded blocks.  
+1. Locate the encoded section in the `.eml` file.
+2. Copy and decode it using local tools (`base64 -d`) or online tools like [CyberChef](https://gchq.github.io/CyberChef/).
+3. Analyze the decoded HTML for suspicious links, buttons, or scripts.
+
+Pay special attention to `<a>` tags masquerading as action buttons and links to credential-stealing sites.
+
+---
+
+## Step 6: Investigate Links and External Resources
+
+Identify all URLs embedded in the email or decoded HTML.  
+- Check if the links are active using screenshot services (e.g., url2png) instead of visiting them directly.
+- Inspect logos or images—often sourced from free image banks.
+- Look for fake social media support accounts; these are commonly used in phishing.
+
+---
+
+## Summary
+
+This lab demonstrates a typical phishing scenario:  
+Attackers create urgency (“Action required” or “Account locked”) and embed multiple Base64-encoded sections containing HTML with fraudulent links and fake support options.  
+Some links are designed to steal credentials, while others may redirect to attacker-controlled social media accounts.
+
+**Security Recommendations:**
+- Never click links or open attachments from suspicious emails.
+- Always analyze headers and content before interacting.
+- Use virtual machines and safe tools for all investigations.
