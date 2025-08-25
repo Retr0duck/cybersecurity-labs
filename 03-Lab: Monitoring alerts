@@ -1,41 +1,75 @@
-This a lab that i use so much to practice checking alerts in a siem, the page is LetsDefend
-So for this normally i check the alert in this case is the trigger reason is for suspicious file.
-The alert drop me this data:
+# Lab 03: Monitoring Alerts
 
-EventID: 231
-Event Time : Feb, 28, 2024, 08:42 AM
-Rule : SOC205 - Malicious Macro has been executed
-Hostname : Jayne
-Ip Address : 172.16.17.198
-File Name : edit1-invoice.docm
-File Path : C:\Users\LetsDefend\Downloads\edit1-invoice.docm
-File Hash : 1a819d18c9a9de4f81829c4cd55a17f767443c22f9b30ca953866827e5d96fb0
-Trigger Reason : Suspicious file detected on system.
-AV/EDR Action : Detected
+## Objective
+Practice reviewing and analyzing alerts in a SIEM using LetsDefend. The goal is to investigate a suspicious file alert and document the analysis process.
 
-With this informaction we can open a investigation, obviously this a malicious but we can find more, i copy the hash and check the hash in virus total
-this throw this:
-MD5: 388fef9350214bb9869e737c4e71204a
-SHA-1: 54d072b84b33a097ffc4d28040b8b1a75da376e0
-SHA-256: 1a819d18c9a9de4f81829c4cd55a17f767443c22f9b30ca953866827e5d96fb0
-Vhash: 47c0f116347b2e835a6a8b15eed1390c
-SSDEEP: 384:HGkydwWWbikOiePMJO95m/Si3kXAz5nBICqNyY3K49CKzrtaxxtkQ6:HGf+bMRMOpiEANLqNnaiCKVaxxtA
-TLSH: T15EB2BE7DD801B459E6669F3EA96B41F0F0464642C609BA4F3640F2CC9FA59EF4342E8F
-File type: Office Open XML Document
-document: msoffice
-text: word docx
-Magic: Microsoft Word 2007+
-TrID: SoftMaker TextMaker text Document (46.5%)   Word Microsoft Office Open XML Format document (with Macro) (28.6%)   Word Microsoft Office Open XML Format document (12.9%)   Open Packaging Conventions container (9.6%)   ZIP compressed archive (2.2%)
-Magika: DOCX
-File size: 23.21 KB (23764 bytes) 
+---
 
-there are information so important, we can check the file that is malicious the name in this case is edit1-invoice.docm
-and The document contains a macro in `ThisDocument.cls` that triggers when the InkEdit control named `GBjdshuiKJ` receives focus.
-The `InkEdit1_GotFocus` subroutine executes a shell command. The command to be executed is retrieved from the `TextBox1` control located on `UserForm1`. 
-The shell command is executed with the window style set to 0, which corresponds to a hidden window. This means that upon gaining focus, 
-the InkEdit control will execute a command retrieved from a textbox on a user form,
-without displaying a window.
+## Incident Details
 
-with this information we can be sure that this file is malicious.
+| Field           | Value                                                    |
+|-----------------|----------------------------------------------------------|
+| EventID         | 231                                                      |
+| Event Time      | Feb 28, 2024, 08:42 AM                                   |
+| Rule            | SOC205 - Malicious Macro has been executed               |
+| Hostname        | Jayne                                                    |
+| IP Address      | 172.16.17.198                                            |
+| File Name       | edit1-invoice.docm                                       |
+| File Path       | C:\Users\LetsDefend\Downloads\edit1-invoice.docm         |
+| File Hash       | 1a819d18c9a9de4f81829c4cd55a17f767443c22f9b30ca953866827e5d96fb0 |
+| Trigger Reason  | Suspicious file detected on system.                      |
+| AV/EDR Action   | Detected                                                 |
 
+---
 
+## Initial Actions
+
+1. Reviewed the SIEM alert details.
+2. Copied the provided file hash and searched it on [VirusTotal](https://www.virustotal.com/).
+
+---
+
+## VirusTotal Results
+
+- **MD5:** 388fef9350214bb9869e737c4e71204a
+- **SHA-1:** 54d072b84b33a097ffc4d28040b8b1a75da376e0
+- **SHA-256:** 1a819d18c9a9de4f81829c4cd55a17f767443c22f9b30ca953866827e5d96fb0
+- **Vhash:** 47c0f116347b2e835a6a8b15eed1390c
+- **SSDEEP:** 384:HGkydwWWbikOiePMJO95m/Si3kXAz5nBICqNyY3K49CKzrtaxxtkQ6
+- **TLSH:** T15EB2BE7DD801B459E6669F3EA96B41F0F0464642C609BA4F3640F2CC9FA59EF4342E8F
+- **File type:** Office Open XML Document (Word document with macro)
+- **File size:** 23.21 KB (23764 bytes)
+
+---
+
+## Malicious File Analysis
+
+- The document `edit1-invoice.docm` contains a macro located in `ThisDocument.cls`.
+- The macro triggers when the InkEdit control named `GBjdshuiKJ` receives focus.
+- The subroutine `InkEdit1_GotFocus` executes a shell command.
+    - The command is retrieved from the `TextBox1` control on `UserForm1`.
+    - The shell command is executed with window style set to 0 (hidden).
+- This means that when the InkEdit control is focused, it runs a command from the user form textbox without displaying a window.
+
+---
+
+## Conclusion
+
+Based on the macro behavior and VirusTotal results, the file is clearly malicious. It is designed to execute hidden commands when interacted with, which could lead to further compromise of the system.
+
+---
+
+## Lessons Learned & Recommendations
+
+- Always review macros and embedded controls in suspicious Office documents.
+- Use tools like VirusTotal to correlate hashes and confirm malicious indicators.
+- Document and isolate the affected system, and notify the user.
+- Further actions: Extract and analyze the macro payload, check for persistence or lateral movement.
+
+---
+
+## References
+
+- [LetsDefend SIEM](https://letsdefend.io/)
+- [VirusTotal](https://www.virustotal.com/)
+- [Microsoft Office Macro Security](https://learn.microsoft.com/en-us/deployoffice/security/integrate-office-365-threat-protection)
