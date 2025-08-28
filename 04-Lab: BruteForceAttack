@@ -1,54 +1,123 @@
-In this lab we are gonna work with a document .zip where we can find 4 documents:
- Length      Date    Time    Name
----------  ---------- -----   ----
-  6032687  2022-02-12 19:31   Bruteforce_Challenge.csv
-    69632  2022-02-12 19:29   Bruteforce_Challenge.evtx
-  6032687  2022-02-12 19:31   Bruteforce_Challenge.txt
-      360  2022-02-12 19:35   README.txt
----------                     -------
- 12135366                     4 files
+# Laboratory: Brute Force Attack
 
-This files are maded for different types of devices ther first 3 files are evidence and hystory of logins or attempts of login.
-The files are secure but always use the file command to check the type of command, in my case i'm using linux, so use:
-> file file.txt
-> ASCII text, with CRLF line terminators
-ok now we got all to start, the first question is:
+Welcome to the **Brute Force Attack** lab. In this exercise, you will learn how to identify and analyze events related to brute force attacks on Windows systems by examining event files. This lab is designed to strengthen your skills in incident detection and response within the cybersecurity field.
 
-1- How many Audit Failure events are there? (Format: Count of Events)
-To know the response open a terminal, go to the folder where is the file and execute this command: 
-└─$ grep -i 'Audit Failure' BTLO_Bruteforce_Challenge.txt | wc -l
-> 4011
-So the answer is 4011
+---
 
-then the second question is:
-2- What is the username of the local account that is being targeted?
-We can check this using the function grep and a keyword, normally i use this:
-└─$ grep -i 'Account Name:' BTLO_Bruteforce_Challenge.txt        
-> Admin
+## Lab Contents
 
-3- What is the Windows Event ID associated with these logon failures?
-This is easy, is Event ID 4625 — An account failed to log on, but we can read the files and you will find the event ID.
+The ZIP archive includes the following files:
 
-5- What is the source IP conducting this attack? (Format: X.X.X.X)
-We can check this viewing the files or with grep executing this:
-└─$ grep -i 'Source Network Address' BTLO_Bruteforce_Challenge.txt
->         Source Network Address: 113.163.194.229 - is the answer
+| Name                        | Size        | Date & Time           |
+|-----------------------------|-------------|-----------------------|
+| Bruteforce_Challenge.csv    | 6,032,687   | 2022-02-12 19:31      |
+| Bruteforce_Challenge.evtx   | 69,632      | 2022-02-12 19:29      |
+| Bruteforce_Challenge.txt    | 6,032,687   | 2022-02-12 19:31      |
+| README.txt                  | 360         | 2022-02-12 19:35      |
 
-6- What country is this IP address associated with? (Format: Country)
-Use the ip in a web like https://ipgeolocation.io/ or other site but this shows data about the source ip address
-the answer is China
+---
 
-7- What is the range of source ports that were used by the attacker to make these login requests?
+## Objectives
 
-My solution was use grep and sort all the ports like this
-└─$ grep -i "Source port" BTLO_Bruteforce_Challenge.txt | awk '{print $NF}' | sort -n
-This will give a response of all the ports but sorted.
-The final response: 49162-65534
+- Identify authentication failure events on Windows systems.
+- Recognize brute force attack patterns.
+- Determine the target account, origin, and method of the attack.
+- Use basic forensic analysis tools and Linux commands.
 
+---
 
+## Instructions
 
+1. Download and extract the provided ZIP file.
+2. Use the following commands in a Linux terminal to analyze the files.
+3. Answer the analysis questions at the end of the exercise.
 
+---
 
+## Useful Commands
+
+### 1. Determine the file type
+```bash
+file Bruteforce_Challenge.txt
+```
+
+### 2. Count authentication failure events
+```bash
+grep -i 'Audit Failure' Bruteforce_Challenge.txt | wc -l
+```
+
+### 3. Find the target account name
+```bash
+grep -i 'Account Name:' Bruteforce_Challenge.txt | sort | uniq
+```
+
+### 4. Identify the Windows Event ID for authentication failures
+Search for "Event ID" and check the associated number:
+```bash
+grep -i 'Event ID' Bruteforce_Challenge.txt | sort | uniq
+```
+
+### 5. Extract the attacker's source IP address
+```bash
+grep -i 'Source Network Address' Bruteforce_Challenge.txt | sort | uniq
+```
+
+### 6. Check the country of the source IP address
+Use an online tool such as [ipgeolocation.io](https://ipgeolocation.io/) to look up the IP.
+
+### 7. Determine the range of source ports used by the attacker
+```bash
+grep -i "Source port" Bruteforce_Challenge.txt | awk '{print $NF}' | sort -n | uniq
+```
+
+---
+
+## Analysis Questions
+
+1. **How many Audit Failure events are logged?**  
+   _Suggested command:_  
+   `grep -i 'Audit Failure' Bruteforce_Challenge.txt | wc -l`
+
+2. **What is the username of the target local account?**  
+   _Suggested command:_  
+   `grep -i 'Account Name:' Bruteforce_Challenge.txt | sort | uniq`
+
+3. **What is the Windows Event ID associated with authentication failures?**  
+   _Suggested command:_  
+   `grep -i 'Event ID' Bruteforce_Challenge.txt | sort | uniq`
+
+4. **What is the attacker's source IP address?**  
+   _Suggested command:_  
+   `grep -i 'Source Network Address' Bruteforce_Challenge.txt | sort | uniq`
+
+5. **From which country does the identified IP originate?**  
+   _Recommended lookup:_  
+   [ipgeolocation.io](https://ipgeolocation.io/)
+
+6. **What is the range of source ports used by the attacker?**  
+   _Suggested command:_  
+   `grep -i "Source port" Bruteforce_Challenge.txt | awk '{print $NF}' | sort -n | uniq`
+
+---
+
+## Recommended Resources
+
+- [Event ID 4625 - Windows Security Log](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4625)
+- [Linux grep manual](https://man7.org/linux/man-pages/man1/grep.1.html)
+- [EVTX File Forensics](https://www.sentinelone.com/blog/evtx-files-windows-event-logs-forensics/)
+
+---
+
+## Credits
+
+Lab developed by **Retr0duck**.  
+Original repository: [cybersecurity-labs](https://github.com/Retr0duck/cybersecurity-labs)
+
+---
+
+## License
+
+This laboratory is for educational use. See the LICENSE file for more details.
 
 
 
