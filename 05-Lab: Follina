@@ -1,44 +1,103 @@
-In this time we are gonna work with a malware named Follina, Let me give you more data about this malware.
-The Follina vulnerability represents a significant risk within Microsoft Office products.
-It enables remote code execution (RCE) attacks, demanding immediate attention as Microsoft has released security updates to address it.
-However, unpatched versions persist, leaving users susceptible to potential exploitation.
+# Laboratory: Follina (CVE-2022-30190) Exploit
 
-first of all we got a file.doc, this is the malware don't open the file with any product of microsoft or any macro.
-Key Details
+Welcome to the **Follina Lab**. In this exercise, you will analyze the Follina vulnerability, a critical remote code execution (RCE) flaw in Microsoft Office, and investigate how attackers exploit it through phishing and document manipulation.
 
-    CVE-2022-30190: Officially recognized as CVE-2022-30190 by the National Institute of Standards and Technology (NIST), Follina warrants tracking due to its severity.
-    Phishing Campaigns: Cybercriminals actively exploit Follina through sophisticated phishing campaigns, luring users into opening malicious Office documents or links that trigger the vulnerability.
-    MSDT Protocol: The critical issue lies in the manipulation of the “Microsoft Support Diagnostic Tool” (MSDT) protocol. Attackers leverage this protocol to execute their own PowerShell commands, often without user interaction.
-    Diverse Attack Vectors: Follina can strike via email-delivered malicious Office documents, USB devices, or even during file previews (e.g., .rtf formats).
-    Discovery Timeline: Unveiled as a zero-day vulnerability on May 27, 2022, the first known malware exploiting it surfaced on April 7, 2022, suggesting prior exploitation.
-    Escalation of Phishing Campaigns: With Follina’s discovery, cybersecurity experts noted a surge in phishing campaigns employing this vulnerability.
+---
 
+## Overview
 
-Details
+- **Follina** (CVE-2022-30190) is a zero-day vulnerability affecting Microsoft Office products.
+- Allows attackers to execute arbitrary code via the MSDT protocol—even with macros disabled.
+- Attackers commonly deliver malicious payloads through phishing emails and document previews.
 
-This section dives deeper into the technical aspects of Follina:
+---
 
-    Execution Mechanisms: A Follina attack involves loading an external reference pointing to a malicious URL. Even with macros disabled on a system, the “Protected View” feature can be used to execute code under the security context of the user running the MS Office document. Additionally, the HTML methods location.href and window.location.href come into play.
-    Malicious URL Invocation: When a user clicks on the document, it triggers a call to the host hxxp://xxx.xx.xxx.xx/color.html external URL resource. This resource then serves a malicious document containing a nefarious ms-msdt: command-invoking PowerShell script code.
-    Persistent Threat: With every execution of the MS Office document, the external resource is consistently loaded from the hardcoded address. This resource responds with a malicious payload containing an ms-msdt: command-invoking PowerShell Script.
+## Lab Files
 
-This technical insight sheds light on the intricacies of Follina’s attack vectors and its methods of exploitation.
+**Warning:**  
+This lab includes a sample malicious file (`file.doc`) for educational analysis. **Do NOT open** it with Microsoft Office or enable macros.
 
-Protecting Against Follina
+---
 
-Addressing Follina necessitates a multi-pronged approach:
+## Objectives
 
-    Patch and Update: Swiftly apply Microsoft’s security updates to shield against Follina.
-    Awareness is Key: Educate staff about phishing threats, fostering a vigilant user base.
-    Disabling MSDT: Initially, Microsoft recommended disabling the MSDT protocol in Windows to mitigate attack vectors.
-    Advanced Cybersecurity: Invest in advanced cybersecurity solutions for robust defense against zero-day attacks.
+- Understand the mechanism of the Follina exploit.
+- Identify key indicators of compromise (IOCs) for Follina.
+- Analyze attack delivery methods and payload execution.
+- Learn effective mitigation and response strategies.
 
-References
+---
 
-    Follina (CVE-2022-30190): Microsoft Office Zero-Day Exploit - LogRhythm
-    Detecting Follina (CVE-2022-30190) with Indicators of Compromise (IOCs) and AI Engine (AIE) trend rules to highlight anomalous activity - LogRhythm
-    Follina — Microsoft Office code execution vulnerability - Infosec Resources
-    Mitigating the Follina Zero-Day Vulnerability (CVE 2022-30190) with Privilege Management for Windows - BeyondTrust
-    Detect the Follina MSDT Vulnerability (CVE-2022-30190) with Qualys Multi-Vector EDR & Context XDR
-    Follina Vulnerability - BlackBerry
+## Technical Details
 
+- **CVE:** [CVE-2022-30190](https://nvd.nist.gov/vuln/detail/CVE-2022-30190)
+- **Discovery:** Zero-day disclosed May 27, 2022. First known exploitation: April 7, 2022.
+- **Attack Vector:** Phishing campaigns lure users into opening malicious Office documents.
+- **Exploit Mechanism:**
+  - The document contains an external reference to a malicious URL (e.g., `hxxp://xxx.xx.xxx.xx/color.html`).
+  - When opened, even in Protected View, Office invokes the MSDT protocol to run attacker-controlled PowerShell commands.
+  - Payload is fetched and executed, compromising the system.
+
+---
+
+## Lab Steps
+
+1. **File Type Analysis**
+    ```bash
+    file file.doc
+    ```
+
+2. **Extract External References**
+    - Use `strings` or a hex editor to find URLs or MSDT references:
+      ```bash
+      strings file.doc | grep -i "http"
+      strings file.doc | grep -i "ms-msdt"
+      ```
+
+3. **Identify Payload**
+    - Locate PowerShell commands or suspicious scripts:
+      ```bash
+      strings file.doc | grep -i "powershell"
+      ```
+
+4. **Review Indicators of Compromise**
+    - Check for network calls to unknown IPs/domains.
+    - Inspect for MSDT protocol usage.
+
+5. **Mitigation Recommendations**
+    - Patch and update Microsoft Office.
+    - Disable MSDT protocol (see [Microsoft guidance](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-30190)).
+    - Educate users about phishing risks.
+
+---
+
+## Analysis Questions
+
+1. **What is the external URL used by the exploit?**
+2. **How does the document trigger code execution without macros?**
+3. **Which protocol is leveraged for RCE in this attack?**
+4. **What are the key IOCs for Follina?**
+5. **How can organizations mitigate this vulnerability?**
+
+---
+
+## References
+
+- [Microsoft Official Guidance](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2022-30190)
+- [LogRhythm: Detecting Follina](https://logrhythm.com)
+- [Infosec Resources: Follina Exploit](https://resources.infosecinstitute.com)
+- [BeyondTrust: Mitigating Follina](https://www.beyondtrust.com)
+- [BlackBerry: Follina Vulnerability](https://www.blackberry.com)
+
+---
+
+## Credits
+
+Lab developed by **Retr0duck**.  
+Original repository: [cybersecurity-labs](https://github.com/Retr0duck/cybersecurity-labs)
+
+---
+
+## License
+
+This laboratory is for educational use. See the LICENSE file for more details.
