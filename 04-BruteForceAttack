@@ -1,0 +1,58 @@
+In this lab we are gonna work with a document .zip where we can find 4 documents:
+ Length      Date    Time    Name
+---------  ---------- -----   ----
+  6032687  2022-02-12 19:31   Bruteforce_Challenge.csv
+    69632  2022-02-12 19:29   Bruteforce_Challenge.evtx
+  6032687  2022-02-12 19:31   Bruteforce_Challenge.txt
+      360  2022-02-12 19:35   README.txt
+---------                     -------
+ 12135366                     4 files
+
+This files are maded for different types of devices ther first 3 files are evidence and hystory of logins or attempts of login.
+The files are secure but always use the file command to check the type of command, in my case i'm using linux, so use:
+> file file.txt
+> ASCII text, with CRLF line terminators
+ok now we got all to start, the first question is:
+
+1- How many Audit Failure events are there? (Format: Count of Events)
+To know the response open a terminal, go to the folder where is the file and execute this command: 
+└─$ grep -i 'Audit Failure' BTLO_Bruteforce_Challenge.txt | wc -l
+> 4011
+So the answer is 4011
+
+then the second question is:
+2- What is the username of the local account that is being targeted?
+We can check this using the function grep and a keyword, normally i use this:
+└─$ grep -i 'Account Name:' BTLO_Bruteforce_Challenge.txt        
+> Admin
+
+3- What is the Windows Event ID associated with these logon failures?
+This is easy, is Event ID 4625 — An account failed to log on, but we can read the files and you will find the event ID.
+
+5- What is the source IP conducting this attack? (Format: X.X.X.X)
+We can check this viewing the files or with grep executing this:
+└─$ grep -i 'Source Network Address' BTLO_Bruteforce_Challenge.txt
+>         Source Network Address: 113.163.194.229 - is the answer
+
+6- What country is this IP address associated with? (Format: Country)
+Use the ip in a web like https://ipgeolocation.io/ or other site but this shows data about the source ip address
+the answer is China
+
+7- What is the range of source ports that were used by the attacker to make these login requests?
+
+My solution was use grep and sort all the ports like this
+└─$ grep -i "Source port" BTLO_Bruteforce_Challenge.txt | awk '{print $NF}' | sort -n
+This will give a response of all the ports but sorted.
+The final response: 49162-65534
+
+
+
+
+
+
+
+
+
+
+
+
