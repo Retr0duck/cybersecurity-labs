@@ -1,0 +1,80 @@
+# SOC Lab Forensic – Phishing Email with Malicious Attachment
+
+## Scenario
+The accounting team received an urgent payment request from a known vendor.  
+The email appeared legitimate but contained a **suspicious link** and a **.zip attachment hiding malware**.  
+The objective was to analyze the email headers, the phishing URL, and the attachment to uncover the attacker's scheme.
+
+---
+
+## Findings
+
+### 1. Sender and Email Infrastructure
+- **Originating IP Address:** 45.67.89.10  
+- **Mail server that relayed the email:** 203.0.113.25  
+- **Sender Email Address:** finance@business-finance.com  
+- **Reply-To Email Address:** support@business-finance.com  
+- **SPF Result:** pass  
+
+**Notes:**  
+- SPF passed, making the email appear more legitimate.  
+- `Reply-To` was redirected to the attacker-controlled address.
+
+---
+
+### 2. Phishing URL
+- **Full URL in email:** `https://secure.business-finance.com/invoice/details/view/INV2025-0987/payment`  
+- **Domain used in the phishing URL:** secure.business-finance.com  
+
+**Notes:**  
+- Uses a subdomain (`secure`) to appear legitimate.  
+- Part of the phishing strategy to trick the user into clicking.
+
+---
+
+### 3. Fake Company
+- **Company Name used in the email:** Business Finance Ltd.  
+
+**Notes:**  
+- The attacker impersonates a trusted vendor to induce the recipient to act quickly.
+
+---
+
+### 4. Malicious Attachment
+- **Filename of the attachment:** Invoice_2025_Payment.zip  
+- **SHA-256 Hash:** 8379C41239E9AF845B2AB6C27A7509AE8804D7D73E455C800A551B22BA25BB4A  
+- **Filename of malicious file inside ZIP:** invoice_document.pdf.bat  
+
+**Notes:**  
+- The `.bat` uses a **double extension** to appear like a PDF.  
+- The file does not execute automatically; user interaction is required (double click).  
+- The hash provides a unique identifier (IOC) for the malicious file.
+
+---
+
+### 5. MITRE ATT&CK Techniques
+- **T1566 – Phishing**
+  - **T1566.001 – Spearphishing Attachment** → `.zip` with malicious `.bat` file  
+  - **T1566.002 – Spearphishing Link** → `secure.business-finance.com` URL  
+- **T1204 – User Execution**
+  - **T1204.002 – Malicious File** → User must open `.bat` for execution  
+
+**Notes:**  
+- This attack relies on social engineering and user execution.  
+- Additional C2 or exfiltration behaviors could map to **T1071** or **T1041** if implemented.
+
+---
+
+### Conclusion
+The attack leveraged **phishing with both a malicious link and a ZIP attachment**:  
+1. The user receives a legitimate-looking email from a fake vendor (`Business Finance Ltd.`).  
+2. SPF passes and headers are spoofed to appear authentic.  
+3. The user is lured to click the link or open the `.bat` file inside the ZIP.  
+4. The `.bat` file is the main malicious payload, designed to execute code if opened.  
+
+**Recommendations:**  
+- Train employees to verify attachments and URLs before opening.  
+- Block malicious domains and URLs at the network/proxy level.  
+- Enable attachment sandboxing and scanning for `.zip` files containing executables.  
+- Monitor for suspicious email headers and SPF/DKIM mismatches.  
+- Maintain IOC list: sender IP, hashes, filenames, phishing domains.  
